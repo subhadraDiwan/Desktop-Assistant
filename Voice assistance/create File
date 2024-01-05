@@ -1,0 +1,57 @@
+import speech_recognition as sr
+import pyttsx3
+import os
+
+#from alexaGui import speak
+
+# Initialize the recognizer
+r = sr.Recognizer()
+
+# Initialize the text-to-speech engine
+engine = pyttsx3.init()
+
+
+# Function to create a new file
+def create_file(filename):
+    try:
+        with open(filename, 'w') as file:
+            pass
+        print("File created:", filename)
+        #speak("File created")
+    except Exception as e:
+        print("Error creating file:", e)
+        #speak("Error creating file")
+
+# Function to listen to voice commands
+def listen_command():
+    with sr.Microphone() as source:
+        print("Listening...")
+        audio = r.listen(source)
+
+    try:
+        # Recognize speech using Google Speech Recognition
+        recognized_text = r.recognize_google(audio)
+        print("You said:", recognized_text)
+        
+        # Prompt user for the desired address on the desktop
+        print("Please provide the desired address on the desktop:")
+        #speak("Please provide the desired address on the desktop")
+        address = input()
+        
+        # Create the filename using the address and recognized text
+        filename = os.path.join(os.path.expanduser("~/Desktop"), address, recognized_text)
+        
+        create_file(filename)
+    except sr.UnknownValueError:
+        print("Could not understand audio.")
+        #speak("Could not understand audio")
+    except sr.RequestError as e:
+        print("Could not request results; {0}".format(e))
+
+# Call the listen_command function
+listen_command()
+
+
+
+
+
